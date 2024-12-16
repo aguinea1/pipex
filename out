@@ -1,0 +1,8 @@
+total 1288
+drwxr-xr-x 2 aguinea 2024_barcelona       6 Dec 10 12:21 bonus
+-rw-r--r-- 1 aguinea 2024_barcelona       0 Dec 16 19:14 infile
+-rw-r--r-- 1 aguinea 2024_barcelona    3852 Dec 16 20:08 Makefile
+drwxr-xr-x 6 aguinea 2024_barcelona      56 Dec 10 15:56 mandatory
+-rwxr-xr-x 1 aguinea 2024_barcelona       0 Dec 16 20:20 out
+-rwxr-xr-x 1 aguinea 2024_barcelona 1310080 Dec 16 20:20 pipex
+-rw-r--r-- 1 aguinea 2024_barcelona       4 Dec 11 20:57 test
