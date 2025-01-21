@@ -6,12 +6,12 @@
 /*   By: aguinea <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:55:19 by aguinea           #+#    #+#             */
-/*   Updated: 2024/12/16 20:22:33 by aguinea          ###   ########.fr       */
+/*   Updated: 2024/12/20 11:30:03 by aguinea          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
-#include "../libft/libft.h"
+#include "../mandatory/include/pipex.h"
+#include "../mandatory/libft/libft.h"
 
 void	my_error(int i)
 {

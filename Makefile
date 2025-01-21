@@ -6,7 +6,7 @@
 #    By: aguinea <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/07 15:29:23 by aguinea           #+#    #+#              #
-#    Updated: 2024/12/10 15:56:11 by aguinea          ###   ########.fr        #
+#    Updated: 2025/01/21 18:59:02 by aguinea          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ GREEN =			\033[0;92m
 ################################################################################
 
 NAME 			= pipex
+BONUS			= loop
 
 CC 				= cc
 CFLAGS 			= -Wall -Werror -Wextra -g -fsanitize=address
@@ -55,29 +56,39 @@ RM 				= rm -f
 #                                 PATH/TO/SRCS                                 #
 ################################################################################
 
-SRCS_D 		= ./mandatory/src
+SRC_DIR			= ./mandatory/src
+BONUS_SRC		= ./bonus/src
 
-OBJ_D 		= ./mandatory/obj
+OBJ_DIR 		= ./mandatory/obj
+BONUS_OBJ		= ./bonus/obj
 
-LIBFT_D 	= ./mandatory/libft
+LIBFT_DIR 		= ./mandatory/libft
 
-INCLUDE_D	= ./mandatory/include
+INCLUDE_DIR		= ./mandatory/include
+BONUS_INCLUDE	= ./bonus/include
+
+SHARED			= ./shared
 
 
 ################################################################################
 #                               SRCS && OBJS                                   #
 ################################################################################
 
-LIBFT 			= $(LIBFT_D)/libft.a
+LIBFT 			= $(LIBFT_DIR)/libft.a
 
-HEADER			= $(INCLUDE_D)/pipex.h
-HEAD_LIBFT		= $(LIBFT_D)/libft.h
-INCLUDE			= $(HEADER) $(HEAD_LIBFT)
+HEADER			= $(INCLUDE_DIR)/pipex.h
+HEAD_BONUS		= $(BONUS_INCLUDE)/loop.h
+HEAD_LIBFT		= $(LIBFT_DIR)/libft.h
+INCLUDE			= $(HEADER) $(HEAD_BONUS) $(HEAD_LIBFT)
 
-SRCS 			= $(SRCS_D)/pipex.c			\
-				  $(SRCS_D)/pipex_utils.c	\
+BONUS_SRCS		= $(BONUS_SRC)/main_bonus.c		\
 
-OBJS			= $(patsubst $(SRCS_D)/%.c,$(OBJ_D)/%.o,$(SRCS))
+SRCS 			= $(SRCS_D)/pipex.c				\
+
+SHARED_SRCS		= $(SHARED)/pipex_utils.c		\
+
+OBJS 			= $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRCS) $(SHARED_SRCS)))
+BONUS_OBJS		= $(patsubst %.c,$(BONUS_OBJ)/%.o,$(notdir $(BONUS_SRCS) $(SHARED_SRCS)))
 
 DEP				= $(OBJ:.o=.d) $(MAIN_OBJ:.o=.d)
 -include $(DEP)
@@ -88,30 +99,55 @@ DEP				= $(OBJ:.o=.d) $(MAIN_OBJ:.o=.d)
 
 all					: libs $(NAME)
 
+bonus				: libs $(BONUS)
+
 libs				:
-					@make -C $(LIBFT_D) > /dev/null
-					@make -C $(LIBFT_D) bonus > /dev/null
+					@make -C $(LIBFT_DIR) > /dev/null
+					@make -C $(LIBFT_DIR) bonus > /dev/null
 
 $(NAME)				: $(OBJS) $(LIBFT)
-					@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_D) -lft -o $(NAME)
+					@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Executable created$(DEF_COLOR)\n"
 
-$(OBJ_D)/%.o		: $(SRCS_D)/%.c $(INCLUDE) Makefile | $(OBJ_D)
+$(BONUS)			: $(BONUS_OBJS) $(LIBFT)
+					@$(CC) $(CFLAGS) $(BONUS_OBJS) -L$(LIBFT_DIR) -lft -o $(BONUS)
+					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)bonus executable created$(DEF_COLOR)\n"
+
+
+$(OBJ_DIR)/%.o		: $(SRCS_DIR)/%.c $(INCLUDE) Makefile | $(OBJ_DIR)
 					@$(CC) $(CFLAGS) -c $< -o $@
 					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
 				
 
-$(OBJ_D)			:
-					@mkdir -p $(OBJ_D)
+
+$(OBJ_DIR)/%.o		: $(SHARED)/%.c $(INCLUDE) Makefile | $(OBJ_DIR)
+					@$(CC) $(CFLAGS) -c $< -o $@
+					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
+
+
+$(BONUS_OBJ)/%.o	: $(BONUS_SRC)/%.c $(INCLUDE) Makefile | $(BONUS_OBJ)
+					@$(CC) $(CFLAGS) -c $< -o $@
+					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
+
+
+$(BONUS_OBJ)/%.o	: $(SHARED)/%.c $(INCLUDE) Makefile | $(BONUS_OBJ)
+					@$(CC) $(CFLAGS) -c $< -o $@
+					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
+
+$(OBJ_DIR)			:
+					@mkdir -p $(OBJ_DIR)
+
+$(BONUS_OBJ)		:
+					@mkdir -p $(BONUS_OBJ)
 
 clean:
-					@$(MAKE) -C $(LIBFT_D) clean > /dev/null
-					@rm -rf $(OBJ_D)
+					@$(MAKE) -C $(LIBFT_DIR) clean > /dev/null
+					@rm -rf $(OBJ_DIR) $(BONUS_OBJ)
 					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Cleaned up object$(DEF_COLOR)\n"
 
 fclean: 			clean
-					@$(MAKE) -C $(LIBFT_D) fclean > /dev/null
-					@rm -f $(NAME)
+					@$(MAKE) -C $(LIBFT_DIR) fclean > /dev/null
+					@rm -f $(NAME) $(BONUS)
 					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)All executables and objects removed$(DEF_COLOR)\n"
 
 re					: fclean all
