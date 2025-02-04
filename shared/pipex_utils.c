@@ -6,7 +6,7 @@
 /*   By: aguinea <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:55:19 by aguinea           #+#    #+#             */
-/*   Updated: 2024/12/20 11:30:03 by aguinea          ###   ########.fr       */
+/*   Updated: 2025/01/29 00:55:57 by aguinea          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,15 @@
 
 void	my_error(int i)
 {
-	i = 0;
-	ft_printf("./pipex infile cmd cmd outfile\n");
+	if (i == 1)
+		ft_printf("./pipex infile cmd cmd outfile\n");
+	else if (i == 3)
+	{
+		ft_printf("pipex: invalid command\n");
+		exit (127);
+	}
+	else if (i == 4)
+		ft_printf("./loop here_doc cmd cmd outfile\n");
 	exit (1);
 }
 
@@ -29,6 +36,8 @@ int	ft_open(char *file, int flag)
 		fd = open (file, O_RDONLY, 0777);
 	else if (flag == 0)
 		fd = open (file, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	else if (flag == 2)
+		fd = open (file, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	if (fd == -1)
 		exit(1);
 	return (fd);

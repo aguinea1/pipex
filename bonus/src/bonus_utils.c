@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   loop.h                                             :+:      :+:    :+:   */
+/*   bonus_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aguinea <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/20 11:21:22 by aguinea           #+#    #+#             */
-/*   Updated: 2025/01/29 00:55:40 by aguinea          ###   ########.fr       */
+/*   Created: 2025/01/28 15:44:05 by aguinea           #+#    #+#             */
+/*   Updated: 2025/01/29 00:40:46 by aguinea          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOOP_H
-# define LOOP_H
+#include "../include/loop.h"
 
-# include "../../mandatory/include/pipex.h"
-# include "../../mandatory/libft/libft.h"
-
-typedef struct s_pipex
+void	here_doc_pfd(char *limit)
 {
-	int	in;
-	int	out;
-}	t_pipex;
+	pid_t	pid;
+	int		pfd[2];
 
-int		main(int ac, char **av, char **env);
-char	*my_getenv(char **env);
-void	here_doc_pfd(char *limit);
-void	here_doc(char *limit, int *pfd);
-#endif
+	if (pipe(pfd) == -1)
+		exit (0);
+	pid = fork();
+	if (pid == -1)
+		exit (0);
+	if (!pid)
+		here_doc(limit, pfd);
+	else
+	{
+		close(pfd[1]);
+		dup2(pfd[0], 0);
+		wait(NULL);
+	}
+}

@@ -6,7 +6,7 @@
 #    By: aguinea <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/07 15:29:23 by aguinea           #+#    #+#              #
-#    Updated: 2025/01/21 18:59:02 by aguinea          ###   ########.fr        #
+#    Updated: 2025/01/29 01:09:15 by aguinea          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,16 +82,15 @@ HEAD_LIBFT		= $(LIBFT_DIR)/libft.h
 INCLUDE			= $(HEADER) $(HEAD_BONUS) $(HEAD_LIBFT)
 
 BONUS_SRCS		= $(BONUS_SRC)/main_bonus.c		\
+				  $(BONUS_SRC)/bonus_utils.c
 
-SRCS 			= $(SRCS_D)/pipex.c				\
+SRCS 			= $(SRCS_DIR)/pipex.c			\
 
 SHARED_SRCS		= $(SHARED)/pipex_utils.c		\
 
 OBJS 			= $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRCS) $(SHARED_SRCS)))
 BONUS_OBJS		= $(patsubst %.c,$(BONUS_OBJ)/%.o,$(notdir $(BONUS_SRCS) $(SHARED_SRCS)))
 
-DEP				= $(OBJ:.o=.d) $(MAIN_OBJ:.o=.d)
--include $(DEP)
 
 ################################################################################
 #                                 MAKEFILE                                     #
@@ -113,26 +112,21 @@ $(BONUS)			: $(BONUS_OBJS) $(LIBFT)
 					@$(CC) $(CFLAGS) $(BONUS_OBJS) -L$(LIBFT_DIR) -lft -o $(BONUS)
 					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)bonus executable created$(DEF_COLOR)\n"
 
-
-$(OBJ_DIR)/%.o		: $(SRCS_DIR)/%.c $(INCLUDE) Makefile | $(OBJ_DIR)
-					@$(CC) $(CFLAGS) -c $< -o $@
-					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
-				
-
+$(OBJ_DIR)/%.o		: $(SRC_DIR)/%.c $(INCLUDE) Makefile | $(OBJ_DIR)
+					$(CC) $(CFLAGS) -c $< -o $@ 
+					@echo "\n$(PINK)[ＯＫ✔]        ➤➤      $(GREEN)Created object file: $@$(DEF_COLOR)\n"
 
 $(OBJ_DIR)/%.o		: $(SHARED)/%.c $(INCLUDE) Makefile | $(OBJ_DIR)
-					@$(CC) $(CFLAGS) -c $< -o $@
-					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
-
+					$(CC) $(CFLAGS) -c $< -o $@
+					@echo "\n$(PINK)[ＯＫ✔]        ➤➤      $(GREEN)Created object file: $@$(DEF_COLOR)\n"
 
 $(BONUS_OBJ)/%.o	: $(BONUS_SRC)/%.c $(INCLUDE) Makefile | $(BONUS_OBJ)
-					@$(CC) $(CFLAGS) -c $< -o $@
-					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
-
+					$(CC) $(CFLAGS) -c $< -o $@ > /dev/null
+					@echo "\n$(PINK)[ＯＫ✔]        ➤➤      $(GREEN)Created object file: $@$(DEF_COLOR)\n"
 
 $(BONUS_OBJ)/%.o	: $(SHARED)/%.c $(INCLUDE) Makefile | $(BONUS_OBJ)
-					@$(CC) $(CFLAGS) -c $< -o $@
-					@echo "\n$(PINK)[ＯＫ✔]		➤➤		$(GREEN)Created object file: $@$(DEF_COLOR)\n"
+					$(CC) $(CFLAGS) -c $< -o $@
+					@echo "\n$(PINK)[ＯＫ✔]        ➤➤      $(GREEN)Created object file: $@$(DEF_COLOR)\n"
 
 $(OBJ_DIR)			:
 					@mkdir -p $(OBJ_DIR)

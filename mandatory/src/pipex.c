@@ -6,7 +6,7 @@
 /*   By: aguinea <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:29:13 by aguinea           #+#    #+#             */
-/*   Updated: 2024/12/16 20:22:55 by aguinea          ###   ########.fr       */
+/*   Updated: 2025/01/29 01:03:14 by aguinea          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	parent_process(char	**spl, char **env, char **av, int *pfd)
 	outfile = av[4];
 	cmnds = av[3];
 	command2 = ft_split(cmnds, ' ');
+	if (!command2 || !command2[0])
+		my_error(3);
 	fd = ft_open(outfile, 0);
 	def_path = get_def_path(spl, command2[0]);
 	dup2(fd, 1);
@@ -39,6 +41,13 @@ void	parent_process(char	**spl, char **env, char **av, int *pfd)
 	free_arr(command2);
 }
 
+static	void	error_static(char **command)
+{
+	ft_printf("pipex: command not found: %s\n ", command[0]);
+	free_arr(command);
+	exit(127);
+}
+
 void	child_process(char	**spl, char **env, char **av, int *pfd)
 {
 	int		fd;
@@ -50,18 +59,17 @@ void	child_process(char	**spl, char **env, char **av, int *pfd)
 	cmnds = av[2];
 	infile = av[1];
 	command1 = ft_split(cmnds, ' ');
+	if (!command1 || !command1)
+		my_error(3);
 	fd = ft_open(infile, 1);
-	close (pfd[0]);
 	def_path = get_def_path(spl, command1[0]);
+	if (!def_path)
+		error_static(command1);
 	dup2(fd, 0);
 	dup2(pfd[1], 1);
 	close (pfd[0]);
 	if (execve(def_path, command1, env) == -1)
-	{
-		ft_printf("pipex: command not found: ", 27);
-		free_arr(command1);
-		exit(1);
-	}
+		error_static(command1);
 	free_arr(command1);
 }
 
