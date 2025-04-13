@@ -1,18 +1,63 @@
 <h1 align="center">
 	PIPEX
 </h1>
-Pipex is a project that involves using some Bash commands (such as cat, grep, ls, etc.) and replicating the behavior of the pipeline "< file1 command1 | command2 > file2", with the following execution format "./pipex file1 command1 command2 file2". In other words, the goal is to redirect the input and output of commands just like a Bash pipeline would.
-  
-  ---
-## › Functions I used
 
-| Function | Description |
-|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `OPEN`   | `open(const char *pathname, int flags, mode_t mode)` – This function is used to open files and obtain a file descriptor, which can then be used to read, write, or manipulate the file. This function returns the integer of the FD, or in case of failure, it returns -1. |
-|          | The flags I used are: |
-|          |   - > `O_RDONLY` is used to open the file in read-only mode. |
-|          |   - > `O_WRONLY` is used to open the file in write-only mode. |
-|          |   - > `O_TRUNC` is used to truncate the file to zero length if it already exists. |
-|          |   - > `O_APPEND` is used to append data to the end of the file without modifying its existing content. |
-|          |   - >`O_CREAT` is used to create a file if it doesn't exist when opening. | 
-| `DUP2`   | `dup2(int oldfd, int newfd)` – This function duplicates a file descriptor. It copies the file descriptor `oldfd` to the file descriptor `newfd`. If `newfd` is already open, it is closed before being reused. The function returns the new file descriptor (`newfd`) or -1 in case of an error. To be clear: It is used to redirect the standard input or output from one file descriptor to another, meaning it changes the destination of the output from one file descriptor (FD) to another.|
+<p align="center">
+	<img src="https://img.shields.io/badge/Language-C-blue?style=flat-square"/>
+	<img src="https://img.shields.io/badge/UNIX%20Pipes-Shell%20Simulation-yellow?style=flat-square"/>
+	<img src="https://img.shields.io/badge/Process%20Execution-Fork%20%7C%20Execve-orange?style=flat-square"/>
+</p>
+
+**Pipex** is a project from 42 that aims to replicate the shell's piping behavior. It simulates how Unix shells process commands using pipes (`|`), by executing a series of commands connected via standard input and output redirection. The goal is to deepen understanding of file descriptors, inter-process communication, and command execution in C using system calls like `pipe`, `fork`, `execve`, and `dup2`.
+
+## › Features
+- 🔗 Pipe simulation using `pipe()` and `dup2()`
+- 👨‍👩‍👧‍👦 Parent-child process management with `fork()`
+- 🧠 Command parsing and environment path resolution
+- 🧪 Handles invalid files, missing commands, and permission errors
+- 🛠 Bonus: support for multiple pipes (multi-command pipelines)
+
+## › Example
+
+	./pipex file1 "grep hello" "wc -l" file2
+
+That simulates this feature in bash:
+
+	< file1 grep hello | wc -l > file2
+
+## 🎁 Bonus
+
+### → Here Doc
+
+Your program must handle shell-like *here doc* syntax. It reads from the input until a delimiter is found, feeding that as input to a command sequence.
+
+Example:
+
+	./pipex here_doc LIMITER cmd1 cmd2 outfile
+
+Which simulates:
+
+	cat << LIMITER | cmd1 | cmd2 >> outfile
+
+### → Unlimited Commands
+
+In the bonus version, `pipex` should be able to handle an arbitrary number of commands, chaining them just like a real shell:
+
+	./pipex infile cmd1 cmd2 cmd3 cmd4 ... cmdN outfile
+
+All commands will be piped sequentially as:
+
+	< infile cmd1 | cmd2 | cmd3 | ... | cmdN > outfile
+
+## 📫 Contact
+
+Feel free to reach out or explore more of my work:
+
+[<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white"/>](https://www.linkedin.com/in/aitor-guinea-961635348/)  
+[<img src="https://img.shields.io/badge/GitHub-aguinea1-black?style=flat-square&logo=github"/>](https://github.com/aguinea1)  
+[<img src="https://img.shields.io/badge/Email-guineaitor36@gmail.com-red?style=flat-square&logo=gmail&logoColor=white"/>](mailto:guineaitor36@gmail.com)
+
+---
+
+⭐
+
